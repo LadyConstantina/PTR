@@ -1,7 +1,13 @@
-# HELLO
+# PTR - Project 0: Starting with Elixir               
 
-**TODO: Add description**
-
+### *Student: Gîlca Constantina*                                       
+                               
+## Objectives                       
+* Follow an installation guide to install the language / development environment of your choice.                                                        
+* Write a script that would print the message “Hello PTR” on the screen. Execute it.                           
+* Initialize a VCS repository for your project. Push your project to a remote repo.                       
+* Create a unit test for your project. Execute it.                                          
+           
 ## Installation
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed
@@ -15,7 +21,5 @@ def deps do
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/hello>.
+
 
