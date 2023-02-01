@@ -3,7 +3,7 @@
                    
                 
 ## Description                      
-&ensp;&ensp;&ensp; This is a repository for the laboratory work regarding the course **Real Time Programming**, 
+&ensp;&ensp;&ensp; This is a repository for the laboratory works regarding the course **Real Time Programming**, 
 part of the *Software Engineering* specialization at the *Technical University of Moldova*.               
 
 ## Contents
