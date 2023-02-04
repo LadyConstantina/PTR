@@ -7,5 +7,5 @@
 part of the *Software Engineering* specialization at the *Technical University of Moldova*.               
 
 ## Contents
-- Week 0: *hello folder* containing the ``hello.ex`` script and unit test. ``hello.ex`` - the simple version of the requirements.
+- Week 0: *hello folder* containing the ``hello.ex`` script and unit test.
 - Week 1: *to be completed...*
