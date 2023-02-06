@@ -1,4 +1,7 @@
 defmodule MathFunctions do
+
+#--------------isPrime(n)-----------------------------
+
     def isPrime(x) when is_integer(x) do
         try do
             if x == 1 or x == 2 or x == 3 do
@@ -16,9 +19,13 @@ defmodule MathFunctions do
         end
     end
 
+#--------------cylinderArea(height,radius)------------
+
     def cylinderArea(h,r) do
         2 * :math.pi() * r * (h+r)
     end
+
+#--------------reverse(list)--------------------------
 
     def reverse(list) do
         reversing(list,[])
@@ -31,6 +38,8 @@ defmodule MathFunctions do
     defp reversing([head|tail],list2) do
         reversing(tail,[head|list2]) 
     end 
+
+#--------------uniqueSum(list)------------------------
 
     def uniqueSum(list) do
         summing(list,0,length(list),0)
@@ -48,6 +57,8 @@ defmodule MathFunctions do
         end
     end
 
+#--------------extractRandomN(list,n)-----------------
+
     def extractRandomN(_list,0) do 
         [] 
     end
@@ -57,6 +68,8 @@ defmodule MathFunctions do
         [response] ++ extractRandomN(list -- [response],n - 1)
     end
 
+#--------------firstFibonacciElements(n)--------------
+
     def firstFibonacciElements(1) do
         [1]
     end
@@ -65,14 +78,20 @@ defmodule MathFunctions do
         fibonacci(n-2,[1,1])
     end
 
-    def fibonacci(n,list) when n>0 do
+    defp fibonacci(n,list) when n>0 do
         el1 = List.last(list)
         el2 = List.last(list -- [el1])
         fibonacci(n-1,list ++ [el1+el2])
     end
 
-    def fibonacci(n,list) when n<= 0 do
+    defp fibonacci(n,list) when n<= 0 do
         list
+    end
+
+#--------------translator(dict,string)----------------
+
+    def translator(dict,string) do
+        Enum.join(swap(dict,string)," ")
     end
 
     defp swap(dict,string) do
@@ -82,15 +101,13 @@ defmodule MathFunctions do
         end
     end
 
-    def translator(dict,string) do
-        Enum.join(swap(dict,string)," ")
-    end
-
     def translatortest() do
         d = Enum.into([mama: "mother",papa: "father"],HashDict.new())
         str = "mama is with papa"
         translator(d,str)
     end
+
+#--------------smallestNumber(a,b,c)------------------
 
     def smallestNumber(0,0,0) do
         0
@@ -106,6 +123,8 @@ defmodule MathFunctions do
         end
     end
 
+#--------------rotateLeft(list,n)---------------------
+
     def rotateLeft(list,0) do
         list
     end
@@ -114,17 +133,19 @@ defmodule MathFunctions do
         rotateLeft(tail ++ [head],n-1)
     end
 
+#--------------listRightAngleTriangles()--------------
+
+    def listRightAngleTriangles() do
+        Enum.filter(trianglesCompute(), & !is_nil(&1))
+    end
+
     defp cupleAngles() do
         for a <- 1..20, b <- 1..20 do
             [a,b]
         end
     end
 
-    def listRightAngleTriangles() do
-        Enum.filter(trianglesCompute(), & !is_nil(&1))
-    end
-
-    def trianglesCompute() do
+    defp trianglesCompute() do
         list = cupleAngles()
         for [a,b] <- list do
             triangle(a,b)
@@ -138,19 +159,37 @@ defmodule MathFunctions do
         end
     end
 
+#--------------removeConsecutiveDublicates(list)------
+
     def removeConsecutiveDublicates(list) do
         removeDub(list,length(list))
     end
 
-    def removeDub(list,0) do
+    defp removeDub(list,0) do
         list
     end
 
-    def removeDub([head | tail],n) do
+    defp removeDub([head | tail],n) do
         if head === List.first(tail) do
             removeDub(tail, n-1)
         else
             removeDub(tail++[head], n-1)
+        end
+    end
+
+#--------------lineWords(list)------------------------
+
+    def lineWords(list) do
+        Enum.filter(lineWordsCheck(list),& !is_nil(&1))
+    end
+
+    defp lineWordsCheck(list) do
+        list2 = perfectStr(list)
+        list3 = for str <- list2 do Enum.any?(checkAll(str)) end
+        for i <- 0..length(list)-1 do
+            if Enum.at(list3,i) do
+                Enum.at(list,i)
+            end
         end
     end
 
@@ -177,30 +216,21 @@ defmodule MathFunctions do
         end
     end
 
-    defp lineWordsCheck(list) do
-        list2 = perfectStr(list)
-        list3 = for str <- list2 do Enum.any?(checkAll(str)) end
-        for i <- 0..length(list)-1 do
-            if Enum.at(list3,i) do
-                Enum.at(list,i)
-            end
-        end
-    end
-
-    def lineWords(list) do
-        Enum.filter(lineWordsCheck(list),& !is_nil(&1))
-    end
+#--------------encode(str,key)------------------------
 
     def encode(str,key) do
         list = String.to_charlist(String.downcase(str))
         Enum.map(list,&(rem((&1 - ?a + key),26)+?a))
     end
 
+#--------------decode(str,key)------------------------
+
     def decode(str,key) do
         list = String.to_charlist(String.downcase(str))
         Enum.map(list,&(rem((&1 - ?a - key),26)+?a))
     end
 
+#--------------lettersCombination(str)----------------
 
     def lettersCombination(str) do
         dict = %{2 => 'abc', 3 => 'def', 4 => 'ghi', 5 => 'jkl', 6 => 'mno', 7 => 'pqrs', 8 => 'tuv', 9 => 'wxyz'}
@@ -208,30 +238,34 @@ defmodule MathFunctions do
         numbers2letters(numbers,dict,[''])
     end
 
-    def numbers2letters([],_dict,result) do
+    defp numbers2letters([],_dict,result) do
         result
     end
 
-    def numbers2letters([head|tail],dict,result) do
+    defp numbers2letters([head|tail],dict,result) do
         combine = for list <- result, char <- dict[head] do list ++ [char] end
         numbers2letters(tail,dict,combine)
     end
+
+#--------------groupAnagrams(list)--------------------
 
     def groupAnagrams(list) do
         resp = Map.new()
         grouping(list,resp)
     end
 
-    def grouping([],resp) do
+    defp grouping([],resp) do
         resp
     end
 
-    def grouping([head|tail],resp) do
+    defp grouping([head|tail],resp) do
         key = Enum.sort(String.to_charlist(head))
         values = Map.get(resp,key,[])
         values = if head in values do values else values ++[head] end
         grouping(tail,Map.put(resp,key,values))
     end
+
+#--------------commonPrefix(list)---------------------
 
     def commonPrefix(list) do
         find(list,0)
@@ -255,6 +289,8 @@ defmodule MathFunctions do
         end
     end
 
+#--------------toRoman(str)---------------------------
+
     def toRoman(str) do
         number = String.to_integer(str)
         dict = %{1000 => "M", 900 => "CM", 500 => "D", 400 => "CD", 100 => "C", 90 => "XC", 50 => "L", 40 => "XL", 10 => "X", 9 => "IX", 5 => "V", 4 => "IV", 1 =>"I" }
@@ -269,6 +305,8 @@ defmodule MathFunctions do
         key = Enum.find(Enum.sort(Map.keys(dict),&(&1>=&2)),fn n -> n <= number end)
         transform(number - key,roman <> dict[key],dict)
     end
+
+#--------------factorize(number)----------------------
 
     def factorize(number) do
         factors(2,number,[])
@@ -285,5 +323,4 @@ defmodule MathFunctions do
             factors(start+1,limit,result)
         end
     end
-
 end
