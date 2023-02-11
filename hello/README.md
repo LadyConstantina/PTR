@@ -21,5 +21,27 @@ def deps do
 end
 ```
 
+## Testing
+1. Open the cmd or powershell in the directory `\hello`.
+2. Type in `mix test`.
+3. The test should give out a fail. 
+```
+  1) test greets the world (HELLOTest)
+     test/hello_test.exs:5
+     Assertion with == failed
+     code:  assert Hello.hello() == :"Helo PTR!"
+     left:  :"Hello PTR!"
+     right: :"Helo PTR!"
+     stacktrace:
+       test/hello_test.exs:6: (test)
+
+
+Finished in 0.03 seconds (0.00s async, 0.03s sync)
+1 test, 1 failure
+```
+
+Why? Because in the `hello_test.exs` file it's expected the function to output "Helo PTR!" but the function in `hello.ex` outputs "Hello PTR!".                 
+*If you want the test to be succesful, modify one of the files so the output matches the one expected.*
+
 
 
