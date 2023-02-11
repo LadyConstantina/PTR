@@ -1,6 +1,6 @@
 defmodule Hello do
 
   def hello do
-    IO.puts('Hello PTR!')
+    :"Hello PTR!"
   end
 end

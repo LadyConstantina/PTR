@@ -3,6 +3,6 @@ defmodule HELLOTest do
   doctest Hello
 
   test "greets the world" do
-    assert Hello.hello() == IO.puts('Hello PTR!')
+    assert Hello.hello() == :"Helo PTR!"
   end
 end
