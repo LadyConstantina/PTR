@@ -9,3 +9,4 @@ part of the *Software Engineering* specialization at the *Technical University o
 ## Contents
 - Week 0: *hello folder* containing the ``lib\hello.ex`` script according to the main requirements and unit test in *test* folder.
 - Week 1: *Math functions* folder containing the ``mathfunctions.ex`` file.
+- Week 3: *Actor Model Introduction* folder containing multiple implementations of different cases for Actor Model (files of type '.ex') and their tests (files of type '.exs')
