@@ -8,13 +8,13 @@ defmodule Semaphore do
         send(mutex,{:acquire,self(),ref})
 
         receive do
-            {:ok,^ref} -> true
+            {:ok,^ref} -> :acquired
         end
     end
 
     def release(mutex) do
         send(mutex,{:release})
-        true
+        :released
     end
 
     def get(mutex) do
@@ -22,7 +22,7 @@ defmodule Semaphore do
         send(mutex,{:get,self(),ref})
 
         receive do
-            {:ok,^ref,n} -> n
+            {:ok,^ref,n} -> IO.inspect(n)
         end
     end
 
@@ -30,18 +30,18 @@ defmodule Semaphore do
         receive do
             {:acquire,actor,ref} ->
                 if n>0 do
-                    IO.puts("n>0")
+                    IO.puts("Semaphore acquired!")
                     send(actor,{:ok,ref})
                     loop(n-1,process_waiting)
                 else
+                    IO.puts("Semaphore blocked a process")
                     loop(n,process_waiting ++[{actor,ref}])
                 end
             {:release} ->
                 if Enum.count(process_waiting) > 0 do
-                    IO.puts(Enum.count(process_waiting))
                     {actor,ref} = List.first(process_waiting)
                     send(actor,{:ok,ref})
-                    loop(n,process_waiting --  List.first(process_waiting))
+                    loop(n,process_waiting -- [List.first(process_waiting)])
                 else
                     loop(n+1,[])
                 end

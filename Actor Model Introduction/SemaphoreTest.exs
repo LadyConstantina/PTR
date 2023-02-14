@@ -1,6 +1,0 @@
-mutex = Semaphore.create(1)
-Semaphore.get(mutex)
-Semaphore.acquire(mutex)
-Semaphore.get(mutex)
-Semaphore.release(mutex)
-Semaphore.get(mutex)
