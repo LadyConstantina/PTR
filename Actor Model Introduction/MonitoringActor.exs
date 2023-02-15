@@ -4,5 +4,5 @@ send(actor,{:message})
 send(actor,{:shutdown})
 
 receive do
-    {:EXIT,^actor,reason} -> IO.puts("Actor has exited (#{reason})")
+    {:EXIT,^actor,reason} -> IO.puts("Actor has exited #{reason}")
 end
