@@ -14,7 +14,7 @@ c("supervisor.ex")
 ```
 **Step 2: unlink the system from the shell supervisor**
 ```
-{:ok,pid} = MySupervisor.start_link(3)
+{:ok,pid} = MySupervisor.start_link()
 Process.unlink(pid)
 ```
 **Step 3: see the children supervised by MySupervisor**
@@ -27,7 +27,7 @@ MySupervisor.process_text("Hello PTR monster!",True)
 ```
 **Step 5: call the process_text function with parameter text and False. You will see that the whole system restarted and works.**
 ```
-MySupervisor.process_text("Hello PTR monster!")
+MySupervisor.process_text("Hello PTR monster!",False)
 ```
 **Finish:**
 ```
