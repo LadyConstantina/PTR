@@ -1,6 +1,0 @@
-IO.puts("schedule('Hello')")
-Scheduler.schedule("Hello")
-IO.puts("schedule('Hi')")
-Scheduler.schedule("Hi")
-IO.puts("schedule('Hey')")
-Scheduler.schedule("Hey")
