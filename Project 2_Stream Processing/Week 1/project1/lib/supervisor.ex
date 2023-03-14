@@ -13,7 +13,8 @@ defmodule MySuper do
         worker = [
             Supervisor.child_spec(Printer, id: :printer),
             Supervisor.child_spec({Reader,["http://localhost:4000/tweets/1"]}, id: :reader1),
-            Supervisor.child_spec({Reader,["http://localhost:4000/tweets/2"]}, id: :reader2)
+            Supervisor.child_spec({Reader,["http://localhost:4000/tweets/2"]}, id: :reader2),
+            Supervisor.child_spec(PrintStats, id: :printerstats)
         ]
         Supervisor.init(worker,strategy: :one_for_one)
     end

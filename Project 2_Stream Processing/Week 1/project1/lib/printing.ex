@@ -12,7 +12,8 @@ defmodule Printer do
   def handle_info({:tweet,data}, _state) do
     sleep_time = trunc(Statistics.Distributions.Poisson.rand(5))
     Process.sleep(sleep_time)
-    IO.inspect("#{data["message"]["tweet"]["text"]} \n")
+    #IO.inspect("#{data["message"]["tweet"]["text"]} \n")
+    #IO.inspect("#{data}")
     {:noreply, nil}
   end
 

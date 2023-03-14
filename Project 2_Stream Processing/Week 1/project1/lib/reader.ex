@@ -11,17 +11,21 @@ defmodule Reader do
     {:ok, nil}
   end
 
+  def handle_info(%HTTPoison.AsyncChunk{chunk: "event: \"message\"\n\ndata: {\"message\": panic}\n\n"}, _state) do
+    {:noreply, nil}
+  end
+
   def handle_info(%HTTPoison.AsyncChunk{chunk: chunk}, _state) do
     "event: \"message\"\n\ndata: " <> message = chunk
     {success, data} = Jason.decode(String.trim(message))
+    #IO.inspect(data["message"]["tweet"]["entities"]["hashtags"])
+    #IO.puts("\n")
     if success == :ok do
       send(Printer, {:tweet,data})
+      GenServer.cast(PrintStats, {:hashtags,data})
     else
       IO.puts "Failed to decode message: #{inspect data}"
     end
-
-    #IO.puts("\n")
-
     {:noreply, nil}
   end
 
