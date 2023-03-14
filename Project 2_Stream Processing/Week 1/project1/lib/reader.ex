@@ -18,8 +18,6 @@ defmodule Reader do
   def handle_info(%HTTPoison.AsyncChunk{chunk: chunk}, _state) do
     "event: \"message\"\n\ndata: " <> message = chunk
     {success, data} = Jason.decode(String.trim(message))
-    #IO.inspect(data["message"]["tweet"]["entities"]["hashtags"])
-    #IO.puts("\n")
     if success == :ok do
       send(Printer, {:tweet,data})
       GenServer.cast(PrintStats, {:hashtags,data})
