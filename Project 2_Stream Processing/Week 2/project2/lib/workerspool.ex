@@ -14,7 +14,7 @@ defmodule WorkerPool do
             Supervisor.child_spec({PrintStats, :printstats}, id: :printerstats),
             Supervisor.child_spec(LoadBalancer, id: :loadbalancer)
         ]
-        Supervisor.init(worker,strategy: :one_for_one, max_restarts: 10, max_seconds: 10000)
+        Supervisor.init(worker,strategy: :one_for_one, max_restarts: 100, max_seconds: 10000)
     end
 
 end
