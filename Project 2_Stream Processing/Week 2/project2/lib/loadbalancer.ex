@@ -12,12 +12,13 @@ defmodule LoadBalancer do
     end
 
     #Round Robin
-    #def handle_info({:tweet,data}, state) do
-    #    id = rem(state + 1, 3) + 1
-    #    worker = :"printer#{id}"
-    #    send(worker,{:tweet,data})
-    #    {:noreply,state+1}
-    #end
+    def handle_info({:tweet2,data}, state) do
+        id = rem(state + 1, 3) + 1
+        worker = :"printer#{id}"
+        IO.puts(worker)
+        send(worker,{:tweet,data})
+        {:noreply,state+1}
+    end
 
     #Least Connected
     def handle_info({:tweet,data},state) do
@@ -26,8 +27,10 @@ defmodule LoadBalancer do
         worker1 = :"printer#{n}b"
         worker2 = :"printer#{n2}b"
         if state[worker1] >= state[worker2] do
+            IO.puts(:"printer#{n}")
             send(:"printer#{n}",{:tweet,data})
         else
+            IO.puts(:"printer#{n2}")
             send(:"printer#{n2}",{:tweet,data})
         end
         {:noreply,state}
@@ -46,8 +49,8 @@ defmodule LoadBalancer do
 
     def handle_info({:kill},state) do
         #id = rem(state,3)+1
-        id = :rand.uniform(3)
-        send(:"printer#{id}",{:kill})
+        #id = :rand.uniform(3)
+        #send(:"printer#{id}",{:kill})
         {:noreply,state}
     end
 
