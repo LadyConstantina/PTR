@@ -16,7 +16,8 @@ defmodule MySuper do
             Supervisor.child_spec({Reader,["http://localhost:4000/tweets/1"]}, id: :reader1),
             Supervisor.child_spec({Reader,["http://localhost:4000/tweets/2"]}, id: :reader2),
             Supervisor.child_spec({PrintStats, :printstats}, id: :printerstats),
-            Supervisor.child_spec(LoadBalancer, id: :loadbalancer)
+            Supervisor.child_spec(LoadBalancer, id: :loadbalancer),
+            Supervisor.child_spec(Cache, id: :cache)
         ]
         Supervisor.init(worker,strategy: :one_for_one)
     end
