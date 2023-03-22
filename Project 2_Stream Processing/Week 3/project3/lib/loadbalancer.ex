@@ -59,7 +59,7 @@ defmodule LoadBalancer do
         nr = length(workers)
 
         #Where the magic happens - kill or birth printers
-        workers = if (stat < nr - max_workers) do
+        workers = if (stat < nr - max_workers - 1 ) do
                     actor = Enum.fetch!(workers,nr-1)
                     DynamicSupervisor.terminate_child(WorkerPool,Process.whereis(actor))
                     Logger.info(" NEWS: #{actor} has been killed. RIP")

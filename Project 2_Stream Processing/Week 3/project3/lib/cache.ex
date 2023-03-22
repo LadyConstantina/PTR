@@ -9,16 +9,16 @@ defmodule Cache do
 
     def store(id) do
         :ets.insert(:cache, {id})
-        IO.puts("Stored #{id} by Load Balancer")
+        #IO.puts("Stored #{id} by Load Balancer")
     end
 
     def look(id,name) do
-        IO.puts("#{name} Looking for #{id}")
+        #IO.puts("#{name} Looking for #{id}")
         :ets.lookup(:cache,id)
     end
 
     def done(id,name) do
-        IO.puts("#{id} task done by #{name}. Deleted!")
+        #IO.puts("#{id} task done by #{name}. Deleted!")
         :ets.delete(:cache, id)
     end
 
