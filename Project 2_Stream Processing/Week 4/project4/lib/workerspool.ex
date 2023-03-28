@@ -1,19 +1,23 @@
 defmodule WorkerPool do
-    use DynamicSupervisor
+    use Supervisor
 
-    def start_link(_args) do
-        IO.puts("WorkerPool started...")
-        DynamicSupervisor.start_link(__MODULE__,[], name: __MODULE__)
+    def start_link(list_spec) do
+        type = List.last(list_spec)
+        IO.puts("#{type}Module started...")
+        Supervisor.start_link(__MODULE__,list_spec, name: :"#{type}Module")
     end
 
-    def init(_args) do
-        #worker = [
-        #    Supervisor.child_spec({Printer, :printer1}, id: :printer1),
-        #    Supervisor.child_spec({Printer, :printer2}, id: :printer2),
-        #    Supervisor.child_spec({Printer, :printer3}, id: :printer3)
-        #]
-        #Supervisor.init(worker,strategy: :one_for_one, max_restarts: 100, max_seconds: 10000)
-        DynamicSupervisor.init(strategy: :one_for_one, max_restarts: 100, max_seconds: 10000)
+    def init(list_spec) do
+        nr = List.first(list_spec)
+        name = List.last(list_spec)
+        type = case List.last(list_spec) do
+            "censure"-> Censure
+            "sentiment" -> Sentiment
+            "engagement" -> Engagement
+            end
+        
+        worker = Enum.map(1..nr, fn nr -> Supervisor.child_spec({type, :"#{name}#{nr}"}, id: :"#{name}#{nr}") end)
+        Supervisor.init(worker, strategy: :one_for_one, max_restarts: 100, max_seconds: 10000)
     end
 
 end

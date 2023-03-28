@@ -8,30 +8,25 @@ defmodule LoadBalancer do
     end
 
     def init(value) do
-        DynamicSupervisor.start_child(WorkerPool,Supervisor.child_spec({Printer, :print1}, id: :print1))
-        DynamicSupervisor.start_child(WorkerPool,Supervisor.child_spec({Printer, :print2}, id: :print2))
-        DynamicSupervisor.start_child(WorkerPool,Supervisor.child_spec({Printer, :print3}, id: :print3))
-        {:ok, %{calls: value, workers: [:print1, :print2, :print3]}}
+        workers = Supervisor.which_children(:censureModule)
+                |> Enum.map(fn {name,address, type, module} -> name end)
+        {:ok, %{calls: value, workers: workers}}
     end
 
     def handle_info({:tweet,data}, state) do
         message_handle(data,state)
-        #new_workers = balance(state[:workers])
-        #new_state = %{calls: state[:calls] + 1, workers: new_workers}
-        new_state = %{calls: state[:calls] + 1, workers: state[:workers]} # ---> Delete if you want to balance
+        new_state = %{calls: state[:calls] + 1, workers: state[:workers]}
         {:noreply, new_state}
     end
 
     def message_handle(data,state) do
-        id1 = rem(state[:calls] + 1, length(state[:workers]))+1
-        #id2 = rem(state[:calls] + 2, length(state[:workers]))+1
-        worker1 = :"print#{id1}"
-        #worker2 = :"print#{id2}"
-
-        #Speculative execution part
-        #Cache.store(state[:calls])
-        GenServer.cast(worker1,{:tweet,data,state[:calls]})
-        #GenServer.cast(worker2,{:tweet,data,state[:calls]})
+        id = rem(state[:calls] + 1, length(state[:workers]))+1
+        censure = :"censure#{id}"
+        sentiment = :"sentiment#{id}"
+        engagement = :"engagement#{id}"
+        GenServer.cast(censure,{:tweet,data})
+        GenServer.cast(sentiment,{:tweet,data})
+        GenServer.cast(engagement,{:tweet,data})
     end
 
     def handle_info({:hashtags,data}, state) do
@@ -43,44 +38,5 @@ defmodule LoadBalancer do
         id = rem(state[:calls],length(state[:workers]))+1
         #send(:"print#{id}",{:kill})
         {:noreply,state}
-    end
-
-    def balance(workers) do
-        max_workers = 3
-        stat = workers
-            |> Enum.map(fn actor -> pid = Process.whereis(actor)
-                        nr = if pid == nil do 
-                                0
-                            else
-                                message_len = Process.info(pid,:message_queue_len)
-                                if message_len == nil do
-                                    0
-                                else
-                                    {:message_queue_len, x} = message_len
-                                    x 
-                                end
-                            end
-                        if nr > 150 do 1 else 0 end end)
-            |> Enum.sum()
-        nr = length(workers)
-
-        #Where the magic happens - kill or birth printers
-        workers = if (stat < nr - max_workers - 1 ) do
-                    actor = Enum.fetch!(workers,nr-1)
-                    DynamicSupervisor.terminate_child(WorkerPool,Process.whereis(actor))
-                    #Logger.info(" NEWS: #{actor} has been killed. RIP")
-                    List.delete(workers,actor)
-                else 
-                    if (stat >= 2) do
-                        id = nr+1
-                        name = :"print#{id}"
-                        DynamicSupervisor.start_child(WorkerPool,Supervisor.child_spec({Printer, name}, id: name))
-                        #Logger.info(" NEWS: #{name} has been born. Happy Birthday!")
-                        List.insert_at(workers,nr,name)
-                    else
-                        workers
-                    end
-                end
-        workers
     end
 end

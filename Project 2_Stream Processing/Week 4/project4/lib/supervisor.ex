@@ -12,12 +12,13 @@ defmodule MySuper do
 
     def init(_args) do
         worker = [
-            Supervisor.child_spec(WorkerPool, id: :printers),
+            Supervisor.child_spec({WorkerPool,[3,"censure"]}, id: :censure_printers),
+            Supervisor.child_spec({WorkerPool,[3,"sentiment"]}, id: :sentiment_printers),
+            Supervisor.child_spec({WorkerPool,[3,"engagement"]}, id: :engagement_printers),
             Supervisor.child_spec({Reader,["http://localhost:4000/tweets/1"]}, id: :reader1),
             Supervisor.child_spec({Reader,["http://localhost:4000/tweets/2"]}, id: :reader2),
             Supervisor.child_spec({ReaderStats,["http://localhost:4000/emotion_values"]}, id: :readerStats),
             Supervisor.child_spec({PrintStats, :printstats}, id: :printerstats),
-            #Supervisor.child_spec(Cache, id: :cache),
             Supervisor.child_spec(LoadBalancer, id: :loadbalancer)
         ]
         Supervisor.init(worker,strategy: :one_for_one)
