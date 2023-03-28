@@ -23,7 +23,7 @@ defmodule Censure do
                     end end)
       |> Enum.join(" ")
     
-    if String.contains?(sentence,"**") do IO.inspect("#{name} says: #{sentence}") end
+    #if String.contains?(sentence,"**") do IO.inspect("#{name} says: #{sentence}") end
     {:noreply, state}
   end
 

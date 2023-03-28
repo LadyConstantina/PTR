@@ -22,7 +22,7 @@ defmodule Sentiment do
         |> Enum.map(fn word ->GenServer.call(ReaderStats,{:score,word}) end)
 
     score = Enum.sum(sentiment_scores) / length(sentiment_scores)
-    IO.puts("Sentiment Score: #{score}")
+    #IO.puts("Sentiment Score: #{score}")
 
     {:noreply, nil}
   end

@@ -7,11 +7,11 @@ defmodule Engagement do
     GenServer.start_link(__MODULE__,[], name: name)
   end
 
-  def init(_args) do
-    {:ok, nil}
+  def init(args) do
+    {:ok, %{}}
   end
 
-  def handle_cast({:tweet,data}, _state) do
+  def handle_cast({:tweet,data}, state) do
     favourite = if data["message"]["tweet"]["retweeted_status"]["favorite_count"] == nil do
                     data["message"]["tweet"]["favorite_count"]
                   else
@@ -31,8 +31,17 @@ defmodule Engagement do
                         else
                           (favourite + retweets) / followers
                         end
-    IO.puts("Engagement: #{engagement_ratio}")
-    {:noreply, nil}
+    name = data["message"]["tweet"]["user"]["name"]
+    find = Map.fetch(state, name)
+    new_state = if find == :error do
+                  Map.merge(state,Map.new([name], fn name -> {name, engagement_ratio} end))
+                else
+                  {:ok, value} = find
+                  IO.inspect("Engagement for user #{name}: #{value+engagement_ratio}")
+                  Map.replace!(state, name, value+engagement_ratio)
+                end
+    #IO.puts("Engagement for user #{name}: #{Map.fetch!(new_state, name)}")
+    {:noreply, new_state}
   end
 
   def handle_info({:kill},_state) do

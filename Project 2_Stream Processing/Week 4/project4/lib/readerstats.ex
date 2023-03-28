@@ -16,10 +16,6 @@ defmodule ReaderStats do
     {:noreply, new_state}
   end
 
-  #def handle_info(_, _state) do
-  #  {:noreply, nil}
-  #end
-
   def handle_info(%HTTPoison.AsyncStatus{id: _id, code: _code}, state) do
     {:noreply, state}
   end
