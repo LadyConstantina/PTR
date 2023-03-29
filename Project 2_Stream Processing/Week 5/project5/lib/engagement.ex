@@ -40,7 +40,8 @@ defmodule Engagement do
                   #IO.inspect("Engagement for user #{name}: #{value+engagement_ratio}")
                   Map.replace!(state, name, value+engagement_ratio)
                 end
-    #IO.puts("Engagement for user #{name}: #{Map.fetch!(new_state, name)}")
+    sentence = "Engagement for user #{name}: #{Map.fetch!(new_state, name)}"
+    GenServer.cast(:aggregator,{:work,data["message"]["tweet"]["user"]["id"],"engagement",sentence})
     {:noreply, new_state}
   end
 

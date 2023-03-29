@@ -24,7 +24,7 @@ defmodule Censure do
       |> Enum.join(" ")
     
     #if String.contains?(sentence,"**") do IO.inspect("#{name} says: #{sentence}") end
-    GenServer.cast(:batcher,{:speak,"#{name} says: #{sentence}"})
+    GenServer.cast(:aggregator,{:work,data["message"]["tweet"]["user"]["id"],"censure","#{name} says: #{sentence}"})
     {:noreply, state}
   end
 

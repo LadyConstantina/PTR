@@ -13,6 +13,7 @@ defmodule MySuper do
     def init(_args) do
         worker = [
             Supervisor.child_spec(Batcher, id: :batcher),
+            Supervisor.child_spec(Aggregator, id: :aggregator),
             Supervisor.child_spec({WorkerPool,[3,"censure"]}, id: :censure_printers),
             Supervisor.child_spec({WorkerPool,[3,"sentiment"]}, id: :sentiment_printers),
             Supervisor.child_spec({WorkerPool,[3,"engagement"]}, id: :engagement_printers),

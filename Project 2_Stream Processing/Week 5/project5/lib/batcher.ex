@@ -18,7 +18,11 @@ defmodule Batcher do
         print? = time_lapse >= 100 #---> time = 100 seconds
         new_state = if print? or length(state[:data]) == 10 do
                         IO.puts("\n Batch: \n")
-                        Enum.map(state[:data], fn sentence -> IO.inspect("#{sentence}") end)
+                        Enum.map(state[:data], fn [sen1, sen2, sen3] -> 
+                                IO.inspect("#{sen1}") 
+                                IO.inspect("#{sen2}") 
+                                IO.inspect("#{sen3}") 
+                        end)
                         %{last_printed: System.system_time(:second), data: []}
                     else
                         state

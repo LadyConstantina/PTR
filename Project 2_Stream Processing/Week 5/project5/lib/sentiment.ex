@@ -22,8 +22,8 @@ defmodule Sentiment do
         |> Enum.map(fn word ->GenServer.call(ReaderStats,{:score,word}) end)
 
     score = Enum.sum(sentiment_scores) / length(sentiment_scores)
-    #IO.puts("Sentiment Score: #{score}")
-
+    sentence = "Sentiment Score: #{score}"
+    GenServer.cast(:aggregator,{:work,data["message"]["tweet"]["user"]["id"],"sentiment",sentence})
     {:noreply, nil}
   end
 
