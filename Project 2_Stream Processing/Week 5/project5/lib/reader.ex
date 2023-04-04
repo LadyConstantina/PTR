@@ -1,12 +1,13 @@
 defmodule Reader do
     use GenServer
+    require Logger
 
   def start_link(url) do
     GenServer.start_link(__MODULE__,url)
   end
 
   def init(url) do
-    IO.puts "Connecting to stream..."
+    Logger.info("Connecting to stream #{url}")
     HTTPoison.get!(url, [], [recv_timeout: :infinity, stream_to: self()])
     {:ok, nil}
   end
@@ -32,11 +33,7 @@ defmodule Reader do
     {:noreply, nil}
   end
 
-  def handle_info(%HTTPoison.AsyncStatus{id: _id, code: _code}, _state) do
-    {:noreply, nil}
-  end
-
-  def handle_info(%HTTPoison.AsyncHeaders{id: _id, headers: _headers}, _state) do
+  def handle_info(_, _state) do
     {:noreply, nil}
   end
 

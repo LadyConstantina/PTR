@@ -3,7 +3,7 @@ defmodule LoadBalancer do
     require Logger
 
     def start_link(_args) do
-        IO.puts("Load Balancer started")
+        Logger.info("Load Balancer started")
         GenServer.start_link(__MODULE__,0, name: __MODULE__)
     end
 

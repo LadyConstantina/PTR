@@ -1,9 +1,10 @@
 defmodule WorkerPool do
     use Supervisor
+    require Logger
 
     def start_link(list_spec) do
         type = List.last(list_spec)
-        IO.puts("#{type}Module started...")
+        Logger.info("#{type}Module started...")
         Supervisor.start_link(__MODULE__,list_spec, name: :"#{type}Module")
     end
 

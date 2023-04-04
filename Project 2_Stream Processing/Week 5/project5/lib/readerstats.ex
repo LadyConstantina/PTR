@@ -1,12 +1,13 @@
 defmodule ReaderStats do
     use GenServer
+    require Logger
 
   def start_link(url) do
     GenServer.start_link(__MODULE__,url, name: __MODULE__)
   end
 
   def init(url) do
-    IO.puts "Connecting to stream..."
+    Logger.info("Connecting to stream #{url}")
     HTTPoison.get!(url, [], [recv_timeout: :infinity, stream_to: self()])
     {:ok, ""}
   end
