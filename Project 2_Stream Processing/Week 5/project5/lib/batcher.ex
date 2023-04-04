@@ -18,12 +18,12 @@ defmodule Batcher do
         time_lapse = now - state[:last_printed]
         print? = time_lapse >= 100 #---> time = 100 seconds
         new_state = if print? or length(state[:data]) == 20 do
-                        #IO.puts("\n Batch of #{length(state[:data])} \n")
-                        #Enum.map(state[:data], fn [sen1, sen2, sen3] -> 
-                        #        IO.inspect("#{sen1}") 
-                        #        IO.inspect("#{sen2}") 
-                        #        IO.inspect("#{sen3}") 
-                        #end)
+                        IO.puts("\n Batch of #{length(state[:data])} \n")
+                        Enum.map(state[:data], fn [sen1, sen2, sen3] -> 
+                                IO.inspect("#{sen1}") 
+                                IO.inspect("#{sen2}") 
+                                IO.inspect("#{sen3}") 
+                        end)
                         GenServer.cast(:aggregator,{:ready,20})
                         %{last_printed: System.system_time(:second), data: []}
                     else

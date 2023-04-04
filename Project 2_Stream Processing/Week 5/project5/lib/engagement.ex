@@ -7,7 +7,7 @@ defmodule Engagement do
     GenServer.start_link(__MODULE__,[], name: name)
   end
 
-  def init(args) do
+  def init(_args) do
     {:ok, %{}}
   end
 
@@ -37,7 +37,6 @@ defmodule Engagement do
                   Map.merge(state,Map.new([name], fn name -> {name, engagement_ratio} end))
                 else
                   {:ok, value} = find
-                  #IO.inspect("Engagement for user #{name}: #{value+engagement_ratio}")
                   Map.replace!(state, name, value+engagement_ratio)
                 end
     sentence = "Engagement for user #{name}: #{Map.fetch!(new_state, name)}"

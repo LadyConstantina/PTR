@@ -15,6 +15,10 @@ defmodule LoadBalancer do
 
     def handle_info({:tweet,data}, state) do
         message_handle(data,state)
+        if data["message"]["tweet"]["retweeted_status"] != nil do
+            map = %{"message" => %{ "tweet" => data["message"]["tweet"]["retweeted_status"]}}
+            send(LoadBalancer,{:tweet, map})
+        end
         new_state = %{calls: state[:calls] + 1, workers: state[:workers]}
         {:noreply, new_state}
     end

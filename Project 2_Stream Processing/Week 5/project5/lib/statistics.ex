@@ -20,7 +20,7 @@ defmodule PrintStats do
               hashtags
               |> Enum.reduce(%{}, fn x, acc -> Map.update(acc, x, 1, &(&1 + 1)) end)
               |> Enum.max_by(fn {_k, v} -> v end)
-      #IO.puts("\n Stats: Most common hashtag is #{tag}, used #{times} times \n")
+      IO.puts("\n Stats: Most common hashtag is #{tag}, used #{times} times \n")
     end
     {:noreply, %{last_printed: if print? do System.system_time(:second) else state[:last_printed] end, hashtags: hashtags}}
   end
