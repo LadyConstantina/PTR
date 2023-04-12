@@ -17,12 +17,13 @@ defmodule Batcher do
                 end
 
         send? = System.system_time(:second) - last_time > 10
-        data = if send? or length(data) == 30 do
+        data = if send? or length(data) == 20 do
                         data = send_batch(data)
                         data
                     else
                         data
                     end
+
         last_time = if send? do
                         send(:aggregator,{:ready,20})
                         System.system_time(:second)
@@ -34,20 +35,20 @@ defmodule Batcher do
     end
 
     def send_batch(data) do
-        data = if DataBase.check() == True do 
-                    data 
-                    |> Enum.map(fn [id,sen1,sen2,{user,sen3}] -> DataBase.store({id, 
-                                                                                user,
-                                                                                sen1, 
-                                                                                sen2, 
-                                                                            sen3} 
-                                                                                ) end )
-                    IO.puts("Sent a #{length(data)} items batch to the DataBase")
-                    []
-            else
-                IO.puts("Database not available. Storing internally!")
-                data
-            end
+        if DataBase.check() == True do 
+                data 
+                |> Enum.map(fn [id,sen1,sen2,{user,sen3}] -> DataBase.store({id, 
+                                                                            user,
+                                                                            sen1, 
+                                                                            sen2, 
+                                                                        sen3} 
+                                                                            ) end )
+                IO.puts("Sent a #{length(data)} items batch to the DataBase")
+                []
+        else
+               IO.puts("Database not available. Storing internally!")
+               data
+        end
     end
 
 end
