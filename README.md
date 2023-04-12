@@ -1,5 +1,6 @@
 # Real Time Programming                            
-#### *Student: Gîlca Constantina, FAF-202*                
+#### *Student: Gîlca Constantina, FAF-202*        
+#### *Teachers: Gavrilița Mihai, Osadcenco Alexandru*              
                    
                 
 ## Description                      
@@ -7,4 +8,5 @@
 part of the *Software Engineering* specialization at the *Technical University of Moldova*.               
 
 ## Contents
-- **Project 0**:  *tasks.pdf* in the folder **Project 0_Introduction** provides description on what each week implements.
+- **Project 1**:  *tasks.pdf* in the folder **Project 1_Introduction** provides description on what each week implements.
+- **Project 2**:  *PTR_project1.pdf* in the folder **Project 2_Stream Processing** provides description on what each week implements.
