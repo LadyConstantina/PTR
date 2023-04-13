@@ -10,15 +10,23 @@ defmodule MessageBrocker do
   def init(port) do
     Logger.info("Message Brocker started")
     Logger.info("Accepting connections on port #{port}")
-    {:ok,listen_socket} = :gen_tcp.listen(port,[:binary,{:packet, 0},{:active,true}])
-    {:ok,socket } = :gen_tcp.accept listen_socket
+    {:ok,listen_socket} = :gen_tcp.listen(port,[:list, packet: :line, active: true, reuseaddr: true])
+    {:ok, socket} = :gen_tcp.accept(listen_socket)
     {:ok, %{port: port, socket: socket}}
   end
 
-  def handle_info({:tcp,_socket,packet}, state) do
+  def handle_info({:tcp,socket,packet}, state) do
       IO.inspect(packet)
-
     {:noreply, state}
+  end
+
+  def handle_info({:tcp_closed,socket},state) do
+    IO.inspect "Socket has been closed"
+    {:noreply,state}
+  end   
+def handle_info({:tcp_error,socket,reason},state) do
+    IO.inspect socket,label: "connection closed due to #{reason}"   
+    {:noreply,state}
   end
 
 end
