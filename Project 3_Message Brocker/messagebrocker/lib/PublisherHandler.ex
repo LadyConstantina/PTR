@@ -12,8 +12,10 @@ defmodule PublisherHandler do
         {:ok, publisher}
     end
 
-    def handle_info({:tcp,_socket,packet}, state) do
-        IO.inspect(packet)
+    def handle_info({:tcp,socket,packet}, state) do
+        IO.puts("\n New packet arrived: \n")
+        data = Jason.decode!(packet)
+        IO.inspect(data)
         {:noreply, state}
     end
 

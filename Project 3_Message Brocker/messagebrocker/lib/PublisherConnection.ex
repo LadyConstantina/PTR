@@ -8,7 +8,7 @@ defmodule PublisherConnection do
 
     def init(port) do
         Process.register(self(), :publisher_connect)
-        {:ok,socket} = :gen_tcp.listen(port,[:list, packet: :line, active: true])
+        {:ok,socket} = :gen_tcp.listen(port,[:list, packet: :raw, active: true])
         Logger.info("Connection module accepting publishers on port #{port}")
         loop([0,socket])
     end
