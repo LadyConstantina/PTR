@@ -13,9 +13,8 @@ defmodule PublisherHandler do
     end
 
     def handle_info({:tcp,socket,packet}, state) do
-        IO.puts("\n New packet arrived: \n")
         data = Jason.decode!(packet)
-        IO.inspect(data)
+        GenServer.cast(DeadLetter,{:check,data})
         {:noreply, state}
     end
 

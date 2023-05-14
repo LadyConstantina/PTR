@@ -2,7 +2,7 @@ defmodule PublisherSup do
     use Supervisor
     require Logger
 
-    def start(_type,_args) do
+    def start_link() do
         Logger.info("Publisher Sup started ...")
         Supervisor.start_link(__MODULE__,[], name: __MODULE__)
     end

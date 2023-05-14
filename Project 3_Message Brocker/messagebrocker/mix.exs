@@ -15,7 +15,7 @@ defmodule Messagebrocker.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      mod: {PublisherSup,[]}
+      mod: {MainSupervisor,[]}
     ]
   end
 
