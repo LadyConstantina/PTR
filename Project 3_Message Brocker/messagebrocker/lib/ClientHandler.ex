@@ -1,0 +1,26 @@
+defmodule ClientHandler do
+    use GenServer
+    require Logger
+
+    def start_link([name|client]) do
+        Logger.info("Client with id #{name} started connection.")
+        GenServer.start_link(__MODULE__, client, name: name)
+        {:ok, self()}
+    end
+
+    def init(client) do
+        {:ok, %{client: client, topics: []}}
+    end
+
+    def handle_info({:tcp,_socket,packet}, state) do
+        IO.inspect(packet)
+        {:noreply, state}
+    end
+
+    def handle_info({:tcp_closed, _socket}, _state) do
+        {:registered_name, name} = Process.info(self(), :registered_name)
+        Logger.info("Client with id #{name} closed connection.")
+        exit(:normal)
+    end
+
+end
