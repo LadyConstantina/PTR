@@ -19,7 +19,7 @@ defmodule PublisherBitCoin do
         text = resp.body()
         {resp, data} = Jason.decode(text)
         [packet, time] = if ((System.system_time(:second) - new_state[:time]) > 20) or (resp == ":error") do
-                    IO.puts("Error!")
+                    Logger.info("Error!")
                     [Jason.encode!(%{error: "Data could not be retrieved", source: "BitCoin Publisher"}), System.system_time(:second)]
                 else
                     [Jason.encode!(%{data: data["bpi"], source: "BitCoin Publisher"}), new_state[:time] ]
