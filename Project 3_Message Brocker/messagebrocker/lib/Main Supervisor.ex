@@ -13,6 +13,8 @@ defmodule MainSupervisor do
             Supervisor.child_spec({DeadLetter,[]}, id: :deadletter),
             Supervisor.child_spec({LoadBalancer, []}, id: :loadbalancer),
             Supervisor.child_spec({DataBase,"lib/database.json"}, id: :database),
+            Supervisor.child_spec({Sender,[]}, id: :sender),
+            Supervisor.child_spec({DurableQueues,[]}, id: :durablequeues),
             Supervisor.child_spec({PublisherSup,[]}, id: :pubsup),
             Supervisor.child_spec({ClientSup,[]}, id: :clientsup)
             #%{

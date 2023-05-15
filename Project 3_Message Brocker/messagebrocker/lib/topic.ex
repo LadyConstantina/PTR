@@ -23,19 +23,13 @@ defmodule Topic do
     end
 
     def cat_handle(data) do
-        packet = {data["fact"], "Cat facts"}
-        # send packet
-        IO.inspect(packet)
+        GenServer.cast(Sender,{:new_message, data["fact"], "Cat facts"})
     end
 
     def bitcoin_handle(data) do
-        packet_eur = {"Bitcoin -> #{data["EUR"]["code"]} : #{data["EUR"]["rate"]} \n","Bitcoin value in EUR"}
-        packet_gbp = {"Bitcoin -> #{data["GBP"]["code"]} : #{data["GBP"]["rate"]} \n","Bitcoin value in GBP"}
-        packet_usd = {"Bitcoin -> #{data["USD"]["code"]} : #{data["USD"]["rate"]} \n","Bitcoin value in USD"}
-        # send packet
-        IO.inspect(packet_eur)
-        IO.inspect(packet_gbp)
-        IO.inspect(packet_usd)
+        GenServer.cast(Sender,{:new_message,"Bitcoin -> #{data["EUR"]["code"]} : #{data["EUR"]["rate"]} \n","Bitcoin value in EUR"})
+        GenServer.cast(Sender,{:new_message,"Bitcoin -> #{data["GBP"]["code"]} : #{data["GBP"]["rate"]} \n","Bitcoin value in GBP"})
+        GenServer.cast(Sender,{:new_message,"Bitcoin -> #{data["USD"]["code"]} : #{data["USD"]["rate"]} \n","Bitcoin value in USD"})
     end
 
 

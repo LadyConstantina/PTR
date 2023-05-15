@@ -18,7 +18,7 @@ defmodule PublisherCat do
         resp = HTTPoison.get!(new_state[:link], [], [])
         text = resp.body()
         {resp, data} = Jason.decode(text)
-        [packet, time] = if ((System.system_time(:second) - new_state[:time]) > 20) or (resp == ":error") do
+        [packet, time] = if ((System.system_time(:second) - new_state[:time]) > 5) or (resp == ":error") do
                     Logger.info("Error!")
                     [Jason.encode!(%{error: "Data could not be retrieved", source: "Cat Publisher"}), System.system_time(:second)]
                 else
