@@ -24,8 +24,7 @@ defmodule Messagebrocker.MixProject do
     [
       {:httpoison, "~> 2.0"},
       {:jason, "~> 1.3"},
-      {:statistics, "~> 0.6"},
-      {:thousand_island, "~> 1.0-pre"}
+      {:statistics, "~> 0.6"}
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
     ]

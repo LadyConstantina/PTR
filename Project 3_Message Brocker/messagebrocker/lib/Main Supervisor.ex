@@ -9,18 +9,20 @@ defmodule MainSupervisor do
 
     def init(_args) do
         workers = [
-            %{
-                id: :pubsup,
-                start: {PublisherSup, :start_link,[]}
-            },
-            %{
-                id: :clientsup,
-                start: {ClientSup, :start_link,[]}
-            },
-            %{
-                id: :deadletter,
-                start: {DeadLetter, :start_link, []}
-            }
+            Supervisor.child_spec({TopicPool,[]}, id: :topicpool),
+            Supervisor.child_spec({DeadLetter,[]}, id: :deadletter),
+            Supervisor.child_spec({LoadBalancer, []}, id: :loadbalancer),
+            Supervisor.child_spec({DataBase,"lib/database.json"}, id: :database),
+            Supervisor.child_spec({PublisherSup,[]}, id: :pubsup),
+            Supervisor.child_spec({ClientSup,[]}, id: :clientsup)
+            #%{
+            #    id: :loadbalancer,
+            #   start: {LoadBalancer, :start_link, []}
+            #},
+            #%{
+            #    id: :database,
+            #    start: {DataBase, :start_link, ["database.json"]}
+            #}
         ]
         Supervisor.init(workers, strategy: :one_for_one)
     end

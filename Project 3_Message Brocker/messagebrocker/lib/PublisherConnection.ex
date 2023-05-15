@@ -3,7 +3,7 @@ defmodule PublisherConnection do
     require Logger
 
     def start_link(port) do
-        Task.start_link(__MODULE__, :init ,[port])
+        Task.start_link(__MODULE__, :init , [port])
     end
 
     def init(port) do

@@ -2,17 +2,14 @@ defmodule PublisherSup do
     use Supervisor
     require Logger
 
-    def start_link() do
+    def start_link(_args) do
         Logger.info("Publisher Sup started ...")
         Supervisor.start_link(__MODULE__,[], name: __MODULE__)
     end
 
     def init(_args) do
         worker = [
-            %{
-                id: :connection,
-                start: {PublisherConnection, :start_link, [7000]}
-            }
+            Supervisor.child_spec({PublisherConnection,7000}, id: :pubconnection)
         ]
         Supervisor.init(worker, strategy: :one_for_one)
     end

@@ -14,6 +14,7 @@ defmodule PublisherHandler do
 
     def handle_info({:tcp,socket,packet}, state) do
         data = Jason.decode!(packet)
+        #IO.puts("Publisher handler -->")
         GenServer.cast(DeadLetter,{:check,data})
         {:noreply, state}
     end

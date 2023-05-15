@@ -3,12 +3,12 @@ defmodule ClientConnection do
     require Logger
 
     def start_link(port) do
-        Task.start_link(__MODULE__, :init ,[port])
+        Task.start_link(__MODULE__, :init , [port])
     end
 
     def init(port) do
         Process.register(self(), :client_connect)
-        {:ok,socket} = :gen_tcp.listen(port,[:list, packet: :line, active: true])
+        {:ok,socket} = :gen_tcp.listen(port,[:list, packet: :raw, active: true])
         Logger.info("Connection module accepting clients on port #{port}")
         loop([0,socket])
     end
