@@ -4,23 +4,48 @@ defmodule ClientHandler do
 
     def start_link([name|client]) do
         Logger.info("Client with id #{name} started connection.")
-        GenServer.start_link(__MODULE__, client, name: name)
+        GenServer.start_link(__MODULE__, [client, name], name: name)
+        GenServer.cast(Sender,{:new_client, name})
         {:ok, self()}
     end
 
-    def init(client) do
-        {:ok, %{client: client, topics: []}}
+    def init([client, name]) do
+        cl = List.first(client)
+        {:ok, %{client: cl, name: name}}
     end
 
-    def handle_info({:tcp,_socket,packet}, state) do
-        IO.inspect(packet)
+    def handle_info({:tcp,socket,packet}, state) do
+        request = Jason.decode!(packet)
+        response =    
+            case request["command"] do
+                "GET topics" -> %{"request" => request["command"],"response" => GenServer.call(DurableQueues,:get_topics)}
+                "subscribe"  -> %{"request" => request["command"],"response" => GenServer.cast(DurableQueues,{:subscribe, state[:name], request["topic"]})}
+                _ -> "#{request["command"]} is unexpected command"
+            end
+        :gen_tcp.send(socket,Jason.encode!(response))
         {:noreply, state}
     end
 
-    def handle_info({:tcp_closed, _socket}, _state) do
+    def handle_info({:tcp_closed, _socket}, state) do
+        GenServer.cast(Sender,{:client_closed, state[:name]})
         {:registered_name, name} = Process.info(self(), :registered_name)
         Logger.info("Client with id #{name} closed connection.")
         exit(:normal)
+    end
+
+    def handle_call({:send,packet}, _from,state) do
+        answer = trying(state[:client],packet)
+        {:reply,:ok,state}
+    end
+
+    def trying(client, packet) do
+        :gen_tcp.send(client,packet)
+        receive do
+                {:tcp, _socket, data} -> mes = Jason.decode!(data)
+                                        mes["command"] == "confirm"
+        after
+            10000000 -> trying(client, packet)
+        end
     end
 
 end

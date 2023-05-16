@@ -20,16 +20,26 @@ defmodule DataBase do
 
     def update() do
         :ets.tab2file(:database,'lib/database.json')
+        :ok
     end
 
     def store({id, data}) do
-        #IO.puts("--> Database")
-        :ets.insert(:database, {id, data, data["source"]})
+        attempts = if data["source"] == "Cat Publisher" do
+                        0
+                    else
+                        -2
+                    end
+        :ets.insert(:database, {id, data, data["source"], attempts})
         update()
     end
 
     def remove(id) do
-        :ets.delete(:database, id)
+        [{id,data,source,attempts}] = :ets.lookup(:database,id)
+        if attempts < 0 do
+            :ets.insert(:database, {id, data, source, attempts+1})
+        else
+            :ets.delete(:database, id)
+        end
         update()
     end
 
