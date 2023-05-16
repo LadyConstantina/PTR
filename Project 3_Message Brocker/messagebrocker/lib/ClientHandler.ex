@@ -18,11 +18,15 @@ defmodule ClientHandler do
         request = Jason.decode!(packet)
         response =    
             case request["command"] do
-                "GET topics" -> %{"request" => request["command"],"response" => GenServer.call(DurableQueues,:get_topics)}
-                "subscribe"  -> %{"request" => request["command"],"response" => GenServer.cast(DurableQueues,{:subscribe, state[:name], request["topic"]})}
+                "GET topics" -> response = %{"request" => request["command"],"response" => GenServer.call(DurableQueues,{:get_topics})}
+                                :gen_tcp.send(socket,Jason.encode!(response))
+                #"GET subscribed topics" -> response = %{"request" => request["command"],"response" => GenServer.call(DurableQueues,{:get_sub_topics,state[:name]})}
+                #                            :gen_tcp.send(socket,Jason.encode!(response))
+                "subscribe"  -> GenServer.cast(DurableQueues,{:subscribe, state[:name], request["topic"]})
+                "unsubscribe" -> GenServer.cast(Sender,{:unsubscribe,state[:name], request["topic"]})
                 _ -> "#{request["command"]} is unexpected command"
             end
-        :gen_tcp.send(socket,Jason.encode!(response))
+        #:gen_tcp.send(socket,Jason.encode!(response))
         {:noreply, state}
     end
 

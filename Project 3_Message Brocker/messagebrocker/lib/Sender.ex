@@ -20,14 +20,11 @@ defmodule Sender do
                     else
                         state
                     end
-        #IO.inspect(new_topics)
         list = :ets.tab2list(:clients)
         send_to = Enum.map(list, fn {client,list} -> if topic in list do client end end)
                     |> Enum.filter(fn client -> client != nil end)
-        #IO.inspect(send_to)
         GenServer.cast(DurableQueues,{:send_to, send_to, data, topic, id})
         {:noreply, new_topics}
-        #{:noreply, state}
     end
 
     def handle_cast({:new_client, socket}, state) do
@@ -37,7 +34,6 @@ defmodule Sender do
 
     def handle_cast({:client_closed, socket}, state) do
         :ets.delete(:clients, socket)
-        #IO.inspect(:ets.tab2list(:clients))
         {:noreply,state}
     end
 
@@ -49,7 +45,19 @@ defmodule Sender do
                                                     :ets.insert(:clients,{socket, list ++ [topic]}) 
                                                 end 
                             end)
+        Logger.info("Client #{socket} subscribed to #{topic}")
         {:noreply, state}
+    end
+
+    def handle_cast({:unsubscribe,socket,topic},state) do
+        answer = :ets.lookup(:clients, socket)
+                    |> Enum.map(fn {socket,list} -> if topic in list do
+                                                        new_list = List.delete(list,topic)
+                                                        :ets.insert(:clients,{socket, new_list})
+                                                    end
+                                end)
+        Logger.info("Client #{socket} unsubscribed from #{topic}")
+        {:noreply,state}
     end
 
 end

@@ -12,7 +12,7 @@ defmodule DurableQueues do
         {:ok, %{}}
     end
 
-    def handle_call(:get_topics,_from, state) do
+    def handle_call({:get_topics},_from, state) do
         {:reply,Map.keys(state), state}
     end
 
@@ -28,7 +28,6 @@ defmodule DurableQueues do
     def handle_cast({:subscribe, client, topic}, state) do
         messages = Map.fetch!(state, topic)
         IO.inspect("The queue for topic #{topic} has #{length(messages)} messages!")
-        #IO.puts("From subscribe:\n")
         updated_queue = send_to([client], messages)
         new_state = Map.put(state, topic, updated_queue)
         GenServer.cast(Sender,{:subscribe, client, topic})
@@ -37,20 +36,16 @@ defmodule DurableQueues do
 
     def handle_cast({:send_to, clients, data, topic, id},state) do
         messages = Enum.concat(Map.fetch!(state, topic), [{data,id}])
-        #IO.puts("From send_to:\n")
         updated_queue = send_to(clients, messages)
         new_state = Map.put(state, topic, updated_queue)
         {:noreply, new_state}
     end
 
     def send_to([], messages) do
-        #IO.inspect(first)
-        #IO.puts("store it")
         messages
     end
 
     def send_to(clients,[]) do
-        #IO.puts("No messages.")
         []
     end
 

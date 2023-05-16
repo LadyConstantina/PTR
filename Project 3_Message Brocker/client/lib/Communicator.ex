@@ -10,10 +10,10 @@ defmodule Communicator do
         message = Jason.decode!(packet)
         cond do
             message["request"] == "GET topics" -> send(Client,{:topics,message["response"]})
-            message["request"] == "subscribe" -> send(Client,{:subscribed,message["response"]})
+            #message["request"] == "GET subscribed topics" -> send(Client,{:topics,message["response"]})
             message["request"] == "publisher message" -> :gen_tcp.send(state[:socket], Jason.encode!(%{"command" => "confirm"}))
                                                             IO.puts("New message arrived: #{message["response"]}")
-            message["request"] == nil -> IO.inspect(message)
+            message["request"] == nil -> IO.puts("Unknown message")
         end
         {:noreply, state}
     end
