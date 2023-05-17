@@ -12,16 +12,15 @@ defmodule DeadLetter do
         {:ok, []}
     end
 
-    def handle_cast({:check, data}, state) do
+    def handle_call({:publish, data,src},_from, state) do
         new_item = if data["error"] != nil do
                         [source: data["source"], time: System.system_time(:second)]
                     else
-                        GenServer.cast(LoadBalancer,{:new_message, data})
-                        #IO.puts("DeadLetter -->")
+                        GenServer.cast(LoadBalancer,{:new_message, data,src})
                         []
                     end
         new_state = state ++ new_item
-        {:noreply,new_state}
+        {:reply,"ok",new_state}
     end
 
 end

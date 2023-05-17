@@ -17,14 +17,6 @@ defmodule MainSupervisor do
             Supervisor.child_spec({DurableQueues,[]}, id: :durablequeues),
             Supervisor.child_spec({PublisherSup,[]}, id: :pubsup),
             Supervisor.child_spec({ClientSup,[]}, id: :clientsup)
-            #%{
-            #    id: :loadbalancer,
-            #   start: {LoadBalancer, :start_link, []}
-            #},
-            #%{
-            #    id: :database,
-            #    start: {DataBase, :start_link, ["database.json"]}
-            #}
         ]
         Supervisor.init(workers, strategy: :one_for_one)
     end

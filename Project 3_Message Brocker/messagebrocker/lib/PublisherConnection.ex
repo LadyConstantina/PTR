@@ -16,7 +16,7 @@ defmodule PublisherConnection do
     def loop([id|socket]) do
         s = List.first(socket)
         {:ok, publisher} = :gen_tcp.accept(s)
-        {:ok, pid} = Supervisor.start_child(PublisherSup, Supervisor.child_spec({PublisherHandler, [:"publisher#{id}",publisher]}, id: :"publisher#{id}"))
+        {:ok, pid} = Supervisor.start_child(PublisherSup, Supervisor.child_spec({PublisherHandler, [:"publisher#{id}", publisher]}, id: :"publisher#{id}"))
         worker = Process.whereis(:"publisher#{id}")
         id = id+1
         :ok = :gen_tcp.controlling_process(publisher, worker)

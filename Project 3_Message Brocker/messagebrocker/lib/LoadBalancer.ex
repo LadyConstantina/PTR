@@ -12,12 +12,11 @@ defmodule LoadBalancer do
         {:ok, %{calls: 0, workers: [:topic1, :topic2, :topic3]}}
     end
 
-    def handle_cast({:new_message, data}, state) do
+    def handle_cast({:new_message, data,src}, state) do
         id = rem(state[:calls] + 1, length(state[:workers]))+1
         worker = :"topic#{id}"
         GenServer.cast(worker,{:message,data,state[:calls]})
-        DataBase.store({state[:calls], data})
-        #IO.puts("LoadBalancer -->")
+        DataBase.store({state[:calls], data,src})
         new_state = %{calls: state[:calls] + 1, workers: state[:workers]}
         {:noreply, new_state}
     end

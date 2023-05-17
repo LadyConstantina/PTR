@@ -27,7 +27,6 @@ defmodule DurableQueues do
 
     def handle_cast({:subscribe, client, topic}, state) do
         messages = Map.fetch!(state, topic)
-        IO.inspect("The queue for topic #{topic} has #{length(messages)} messages!")
         updated_queue = send_to([client], messages)
         new_state = Map.put(state, topic, updated_queue)
         GenServer.cast(Sender,{:subscribe, client, topic})
@@ -59,7 +58,7 @@ defmodule DurableQueues do
     end
 
     def require_answer(client,packet) do
-        if Process.whereis(client) != nil do 
+        if Process.whereis(client) != nil do
             GenServer.call(client,{:send,packet})
             client
         else 

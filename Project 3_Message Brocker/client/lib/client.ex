@@ -12,19 +12,16 @@ defmodule Client do
       new_state = if state[:port] == nil do
               {:ok, port} = :gen_tcp.connect({127, 0, 0, 1},8000,[:list, packet: :raw, active: true])
               {:ok, pid} = GenServer.start_link(Communicator, [port], name: Communicator)
-              #Process.monitor(pid)
               :ok = :gen_tcp.controlling_process(port, pid)
               %{port: port, topics: state[:topics]}
             else
               state
             end
-      #IO.inspect(:gen_tcp.recv(port,0,100))
       command = IO.gets("-> ") |> String.trim()
       
       final_state = case command do
         "subscribe" -> topic = subscribe(new_state[:port])
                         if topic not in new_state[:topics] do
-                          #IO.inspect(new_state[:topics] ++ [topic])
                           %{port: new_state[:port], topics: new_state[:topics] ++ [topic]}
                         else
                           new_state
@@ -57,11 +54,6 @@ defmodule Client do
     end
 
     def unsubscribe(port,topics) do
-        #send(Communicator,{:send,Jason.encode!(%{"command" => "GET subscribed topics"})})
-        #topics = 
-        #  receive do
-        #    {:topics, topics} -> topics
-        #  end
         IO.inspect(topics)
         topic_id = IO.gets("Choose from \n#{ inspect(topics)}\n by number (1..n): ") 
                     |> String.trim()
