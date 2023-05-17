@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 FROM elixir:1.14.3
 
 RUN mkdir /app

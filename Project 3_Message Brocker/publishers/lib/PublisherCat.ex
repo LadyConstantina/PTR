@@ -9,7 +9,7 @@ defmodule PublisherCat do
     end
 
     def loop(state) do
-        new_state = if state[:connected] == nil do 
+        new_state = if state[:connected] == nil do
                         {:ok, port} = :gen_tcp.connect({127, 0, 0, 1},7000,[:list, packet: :raw, active: true])
                         {:ok, pid} = GenServer.start_link(PCCommunicator, [port], name: PCCommunicator)
                         :ok = :gen_tcp.controlling_process(port, pid)
@@ -34,7 +34,7 @@ defmodule PublisherCat do
 
     def message(packet) do
         send(PCCommunicator,{:send,packet})
-        answer = 
+        _answer = 
           receive do
             {:PUBREC, _message} -> confirm()
             after 

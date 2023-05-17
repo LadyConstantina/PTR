@@ -8,3 +8,6 @@ services:
     
     publishers:
       build: /publishers
+      depends_on:
+        messagebrocker:
+          condition: service_started

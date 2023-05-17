@@ -22,6 +22,7 @@ defmodule PubSuper do
                 start: {PublisherBitCoin, :start_link, [["https://api.coindesk.com/v1/bpi/currentprice.json"]]}
             }
         ]
+        #Process.sleep(10000)
         Supervisor.init(worker,strategy: :one_for_one)
     end
 end
