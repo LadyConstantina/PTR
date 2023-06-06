@@ -10,3 +10,4 @@ part of the *Software Engineering* specialization at the *Technical University o
 ## Contents
 - **Project 1**:  *tasks.pdf* in the folder **Project 1_Introduction** provides description on what each week implements.
 - **Project 2**:  *PTR_project1.pdf* in the folder **Project 2_Stream Processing** provides description on what each week implements.
+- **Project 3**:  *PTR_project2.pdf* in the folder **Project 2_Message Brocker** provides description on what each week implements.
